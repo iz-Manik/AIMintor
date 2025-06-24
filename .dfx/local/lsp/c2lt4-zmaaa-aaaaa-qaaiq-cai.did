@@ -1,0 +1,26 @@
+type Leaderboard = record {
+  top_creators : vec record { principal; nat64 };
+  most_liked : vec record { text; nat64 };
+  most_shared : vec record { text; nat64 };
+};
+type Vibe = record {
+  id : text;
+  creator : principal;
+  content : text;
+  shares : nat64;
+  likes : nat64;
+  timestamp : nat64;
+};
+service : {
+  claim_staking_rewards : () -> (nat64);
+  get_leaderboard : () -> (Leaderboard) query;
+  get_my_balance : () -> (nat64) query;
+  get_my_reputation : () -> (float32) query;
+  get_my_vibes : () -> (vec Vibe) query;
+  get_vibe_stats : (text) -> (nat64, nat64) query;
+  like_vibe : (text) -> (nat64);
+  mint_vibe : (text) -> (text);
+  reset_account : () -> ();
+  share_vibe : (text) -> (nat64);
+  stake_tokens : (nat64) -> ();
+}
