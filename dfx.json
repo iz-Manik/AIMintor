@@ -1,0 +1,32 @@
+{
+  "canisters": {
+    "backend": {
+      "type": "custom",
+      "candid": "src/backend/vibe_platform.did",
+      "wasm": "src/backend/target/wasm32-unknown-unknown/release/backend.wasm",
+      "build": "cd src/backend && cargo build --target wasm32-unknown-unknown --release",
+      "post-build": "cp src/backend/target/wasm32-unknown-unknown/release/backend.wasm .",
+      "declarations": {
+        "output": "src/declarations"
+      },
+      "metadata": [
+        {
+          "name": "candid:service",
+          "path": "src/backend/vibe_platform.did"
+        }
+      ]
+    },
+    "frontend": {
+      "type": "assets",
+      "source": ["src/frontend/dist"],
+      "dependencies": ["backend"]
+    }
+  },
+  "defaults": {
+    "build": {
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
