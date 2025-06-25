@@ -11,7 +11,7 @@ export { idlFactory } from "./backend.did.js";
  */
 export const canisterId =process.env.CANISTER_ID_BACKEND ||
                          process.env.VIBE_PLATFORM_CANISTER_ID ||
-                         "a4gq6-oaaaa-aaaab-qaa4q-cai";
+                         "jaeoi-baaaa-aaaae-aaksa-cai";
 
 export const createActor = (canisterId, options = {}) => {
   const agent = options.agent || new HttpAgent({ ...options.agentOptions });
