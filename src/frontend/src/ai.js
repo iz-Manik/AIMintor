@@ -6,16 +6,19 @@ export const freeAIProviders = {
   GEMINI_FLASH: {
     name: "Gemini Flash",
     free: true,
+    requiresKey: true,
     url: GEMINI_FLASH_API
   },
   OPENAI_GPT4: {
     name: "OpenAI GPT-4 Turbo",
     free: false,
+    requiresKey: true,
     url: OPENAI_API
   },
   HUGGING_FACE: {
     name: "Hugging Face",
     free: true,
+    requiresKey: false,
     url: HUGGING_FACE_API
   }
 };
@@ -97,7 +100,7 @@ export const generateVibe = async (prompt, apiKey = "", provider = 'GEMINI_FLASH
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.error?.message || "AI generation failed");
+      throw new Error(`API Error: ${errorData.error?.message || "Generation failed"}`);
     }
 
     const data = await response.json();
