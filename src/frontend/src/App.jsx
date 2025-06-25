@@ -211,7 +211,12 @@ function App() {
       alert(`You need at least ${MINT_COST} $VIBE to mint a vibe! Engage with others to earn tokens.`);
       return;
     }
-
+    const provider = freeAIProviders[aiProvider];
+    if (!apiKey && provider.requiresKey) {
+      alert(`Please enter a valid API key for ${provider.name}`);
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
 
     try {
