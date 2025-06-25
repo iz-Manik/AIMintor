@@ -211,11 +211,11 @@ function App() {
       alert(`You need at least ${MINT_COST} $VIBE to mint a vibe! Engage with others to earn tokens.`);
       return;
     }
+
     const provider = freeAIProviders[aiProvider];
-    if (!apiKey && provider.requiresKey) {
+    if (!apiKey.trim() && provider.requiresKey) {
       alert(`Please enter a valid API key for ${provider.name}`);
-      setIsLoading(false);
-      return;
+      return; // Exit early without setting loading state
     }
     setIsLoading(true);
 
@@ -223,6 +223,9 @@ function App() {
       const aiPrompt = `Create a poetic NFT description for: ${vibeInput}`;
       const generatedVibe = await generateVibe(aiPrompt, apiKey, aiProvider);
 
+      if (generatedVibe.includes("Failed to generate vibe") || generatedVibe.includes("ERROR")) {
+        throw new Error(generatedVibe);
+      }
       // Mint the vibe on the blockchain
       const vibeId = await backend.mint_vibe(generatedVibe);
       console.log("Minted vibe ID:", vibeId);
