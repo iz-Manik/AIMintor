@@ -1,224 +1,3 @@
-// #![allow(deprecated)]
-
-// use ic_cdk::{caller, query, update, init};
-// use candid::{CandidType, Principal, Deserialize};
-// use std::cell::RefCell;
-// use std::collections::{HashMap, HashSet};
-
-// thread_local! {
-//     static STATE: RefCell<State> = RefCell::new(State::default());
-// }
-
-// #[derive(Default)]
-// struct State {
-//     user_vibes: HashMap<Principal, Vec<Vibe>>,
-//     token_balances: HashMap<Principal, u64>,
-//     vibe_interactions: HashMap<String, InteractionStats>,
-//     user_likes: HashMap<Principal, HashSet<String>>,
-// }
-
-// #[derive(Clone, Debug, CandidType, Deserialize)]
-// struct Vibe {
-//     id: String,
-//     content: String,
-//     timestamp: u64,
-//     likes: Option<u64>,
-//     shares: Option<u64>,
-// }
-
-// #[derive(Default, CandidType, Deserialize)]
-// struct InteractionStats {
-//     likes: u64,
-//     shares: u64,
-// }
-
-// #[init]
-// fn init() {
-//     ic_cdk::println!("Vibe canister initialized!");
-// }
-
-// #[update]
-// fn mint_vibe(content: String) -> String {
-//     let user = caller();
-//     let timestamp = ic_cdk::api::time();
-//     let id = format!("{}-{}", user.to_text(), timestamp);
-
-//     STATE.with(|state| {
-//         let mut state = state.borrow_mut();
-
-//         let new_vibe = Vibe {
-//             id: id.clone(),
-//             content: content.clone(),
-//             timestamp,
-//             likes: Some(0),
-//             shares: Some(0),
-//         };
-
-//         state.user_vibes.entry(user).or_default().push(new_vibe);
-
-//         state.vibe_interactions.insert(
-//             id.clone(),
-//             InteractionStats {
-//                 likes: 0,
-//                 shares: 0,
-//             },
-//         );
-
-//         let balance = state.token_balances.entry(user).or_insert(0);
-//         *balance += 10;
-
-//         id
-//     })
-// }
-
-// #[query]
-// fn get_my_vibes() -> Vec<Vibe> {
-//     let user = caller();
-
-//     STATE.with(|state| {
-//         let state = state.borrow();
-
-//         state.user_vibes
-//             .get(&user)
-//             .cloned()
-//             .unwrap_or_default()
-//             .into_iter()
-//             .map(|mut vibe| {
-//                 if let Some(stats) = state.vibe_interactions.get(&vibe.id) {
-//                     vibe.likes = Some(stats.likes);
-//                     vibe.shares = Some(stats.shares);
-//                 }
-//                 vibe
-//             })
-//             .collect()
-//     })
-// }
-
-// #[query]
-// fn get_my_balance() -> u64 {
-//     let user = caller();
-
-//     STATE.with(|state| {
-//         *state.borrow()
-//             .token_balances
-//             .get(&user)
-//             .unwrap_or(&0)
-//     })
-// }
-
-// #[update]
-// fn reset_account() {
-//     let user = caller();
-
-//     STATE.with(|state| {
-//         let mut state = state.borrow_mut();
-//         state.user_vibes.remove(&user);
-//         state.user_likes.remove(&user);
-//         state.token_balances.insert(user, 0);
-//     })
-// }
-
-// #[update]
-// fn like_vibe(vibe_id: String) -> u64 {
-//     let user = caller();
-
-//     STATE.with(|state| {
-//         let mut state = state.borrow_mut();
-
-//         let user_likes = state.user_likes.entry(user).or_default();
-//         if user_likes.contains(&vibe_id) {
-//             return state.vibe_interactions
-//                 .get(&vibe_id)
-//                 .map(|stats| stats.likes)
-//                 .unwrap_or(0);
-//         }
-
-//         user_likes.insert(vibe_id.clone());
-
-//         state.vibe_interactions
-//             .entry(vibe_id.clone())
-//             .or_default()
-//             .likes += 1;
-
-//         let owner_opt = state.user_vibes.iter()
-//             .find_map(|(owner, vibes)| {
-//                 if vibes.iter().any(|v| v.id == vibe_id) {
-//                     Some(*owner)
-//                 } else {
-//                     None
-//                 }
-//             });
-
-//         if let Some(owner) = owner_opt {
-//             let balance = state.token_balances.entry(owner).or_insert(0);
-//             *balance += 1;
-//         }
-
-//         state.vibe_interactions
-//             .get(&vibe_id)
-//             .map(|stats| stats.likes)
-//             .unwrap_or(0)
-//     })
-// }
-
-// #[update]
-// fn share_vibe(vibe_id: String) -> u64 {
-//     let user = caller();
-
-//     STATE.with(|state| {
-//         let mut state = state.borrow_mut();
-
-//         state.vibe_interactions
-//             .entry(vibe_id.clone())
-//             .or_default()
-//             .shares += 1;
-
-//         let owner_opt = state.user_vibes.iter()
-//             .find_map(|(owner, vibes)| {
-//                 if vibes.iter().any(|v| v.id == vibe_id) {
-//                     Some(*owner)
-//                 } else {
-//                     None
-//                 }
-//             });
-
-//         if let Some(owner) = owner_opt {
-//             let balance = state.token_balances.entry(owner).or_insert(0);
-//             *balance += 2;
-//         }
-
-//         state.vibe_interactions
-//             .get(&vibe_id)
-//             .map(|stats| stats.shares)
-//             .unwrap_or(0)
-//     })
-// }
-
-// #[query]
-// fn get_vibe_stats(vibe_id: String) -> (u64, u64) {
-//     STATE.with(|state| {
-//         let state = state.borrow();
-//         state.vibe_interactions
-//             .get(&vibe_id)
-//             .map(|stats| (stats.likes, stats.shares))
-//             .unwrap_or((0, 0))
-//     })
-// }
-
-// #[cfg(test)]
-// mod tests {
-//     use super::*;
-//     use candid::export_service;
-
-//     export_service!();
-
-//     #[test]
-//     fn export_candid() {
-//         std::fs::write("vibe_platform.did", __export_service()).unwrap();
-//     }
-// }
-
-
 #![allow(deprecated)]
 
 use ic_cdk::{query, update, init};
@@ -244,6 +23,7 @@ const LIKE_REWARD_USER: u64 = 1;
 const LIKE_REWARD_CREATOR: u64 = 2;
 const SHARE_REWARD_USER: u64 = 2;
 const SHARE_REWARD_CREATOR: u64 = 3;
+const ANONYMOUS_PRINCIPAL: &str = "2vxsx-fae";
 
 #[derive(Default, Clone)]
 struct State {
@@ -274,9 +54,9 @@ struct InteractionStats {
 
 #[derive(Default, Clone, CandidType, Deserialize)]
 struct Leaderboard {
-    top_creators: Vec<(Principal, u64)>,
-    most_liked: Vec<(String, u64)>,
-    most_shared: Vec<(String, u64)>,
+    top_creators: Vec<(Principal, u64)>, // (creator, total tokens)
+    most_liked: Vec<(String, u64)>,      // (vibe ID, like count)
+    most_shared: Vec<(String, u64)>,     // (vibe ID, share count)
 }
 
 #[init]
@@ -305,6 +85,49 @@ fn current_caller() -> Principal {
     {
         ic_cdk::caller()
     }
+}
+
+// Helper to update Vibe objects when interactions occur
+fn update_vibe_stats(vibe_id: &str, state: &mut State, likes: u64, shares: u64) {
+    for (_, vibes) in state.user_vibes.iter_mut() {
+        if let Some(vibe) = vibes.iter_mut().find(|v| v.id == vibe_id) {
+            vibe.likes = likes;
+            vibe.shares = shares;
+            break;
+        }
+    }
+}
+
+// Completely rebuild leaderboard from current state
+fn rebuild_leaderboard(state: &mut State) {
+    // Get the actual anonymous principal
+    let anonymous_principal = Principal::anonymous();
+
+    // Rebuild top creators - filter out ONLY the anonymous principal
+    let mut creators: Vec<(Principal, u64)> = state.token_balances
+        .iter()
+        .filter(|(p, _)| **p != anonymous_principal) // Only filter anonymous
+        .map(|(p, b)| (*p, *b))
+        .collect();
+
+    creators.sort_by(|a, b| b.1.cmp(&a.1));
+    state.leaderboard.top_creators = creators.into_iter().take(10).collect();
+
+    // Rebuild most liked vibes
+    let mut most_liked: Vec<(String, u64)> = state.vibe_interactions
+        .iter()
+        .map(|(id, stats)| (id.clone(), stats.likes))
+        .collect();
+    most_liked.sort_by(|a, b| b.1.cmp(&a.1));
+    state.leaderboard.most_liked = most_liked.into_iter().take(10).collect();
+
+    // Rebuild most shared vibes
+    let mut most_shared: Vec<(String, u64)> = state.vibe_interactions
+        .iter()
+        .map(|(id, stats)| (id.clone(), stats.shares))
+        .collect();
+    most_shared.sort_by(|a, b| b.1.cmp(&a.1));
+    state.leaderboard.most_shared = most_shared.into_iter().take(10).collect();
 }
 
 #[update]
@@ -347,7 +170,7 @@ fn mint_vibe(content: String) -> String {
         );
 
         *state.reputation.entry(user).or_insert(1.0) += 0.1;
-        update_leaderboard(&mut state, &new_vibe);
+        rebuild_leaderboard(&mut state);
 
         id
     })
@@ -401,6 +224,7 @@ fn reset_account() {
         state.user_shares.remove(&user);
         state.token_balances.insert(user, INITIAL_BALANCE);
         state.reputation.insert(user, 1.0);
+        rebuild_leaderboard(&mut state);
     })
 }
 
@@ -435,19 +259,33 @@ fn like_vibe(vibe_id: String) -> u64 {
         let creator_reward = (LIKE_REWARD_CREATOR as f32 * reputation) as u64;
         let user_reward = LIKE_REWARD_USER;
 
-        let new_likes = state.vibe_interactions
-            .entry(vibe_id.clone())
-            .and_modify(|stats| stats.likes += 1)
-            .or_insert(InteractionStats { likes: 1, shares: 0 })
-            .likes;
+        // Get current stats without holding a reference
+        let current_stats = state.vibe_interactions
+            .get(&vibe_id)
+            .cloned()
+            .unwrap_or(InteractionStats { likes: 0, shares: 0 });
 
+        let new_likes = current_stats.likes + 1;
+        let current_shares = current_stats.shares;
+
+        // Update interactions
+        state.vibe_interactions.insert(
+            vibe_id.clone(),
+            InteractionStats {
+                likes: new_likes,
+                shares: current_shares
+            }
+        );
+
+        // Update balances and reputation
         *state.token_balances.entry(owner).or_insert(INITIAL_BALANCE) += creator_reward;
         *state.token_balances.entry(user).or_insert(INITIAL_BALANCE) += user_reward;
-
         *state.reputation.entry(user).or_insert(1.0) += 0.01;
         *state.reputation.entry(owner).or_insert(1.0) += 0.05;
 
-        update_leaderboard_after_interaction(&mut state, &vibe_id);
+        // Update Vibe object and rebuild leaderboard
+        update_vibe_stats(&vibe_id, &mut state, new_likes, current_shares);
+        rebuild_leaderboard(&mut state);
 
         new_likes
     })
@@ -484,35 +322,36 @@ fn share_vibe(vibe_id: String) -> u64 {
         let creator_reward = (SHARE_REWARD_CREATOR as f32 * reputation) as u64;
         let user_reward = SHARE_REWARD_USER;
 
-        let new_shares = state.vibe_interactions
-            .entry(vibe_id.clone())
-            .and_modify(|stats| stats.shares += 1)
-            .or_insert(InteractionStats { likes: 0, shares: 1 })
-            .shares;
+        // Get current stats without holding a reference
+        let current_stats = state.vibe_interactions
+            .get(&vibe_id)
+            .cloned()
+            .unwrap_or(InteractionStats { likes: 0, shares: 0 });
 
+        let new_shares = current_stats.shares + 1;
+        let current_likes = current_stats.likes;
+
+        // Update interactions
+        state.vibe_interactions.insert(
+            vibe_id.clone(),
+            InteractionStats {
+                likes: current_likes,
+                shares: new_shares
+            }
+        );
+
+        // Update balances and reputation
         *state.token_balances.entry(owner).or_insert(INITIAL_BALANCE) += creator_reward;
         *state.token_balances.entry(user).or_insert(INITIAL_BALANCE) += user_reward;
-
         *state.reputation.entry(user).or_insert(1.0) += 0.02;
         *state.reputation.entry(owner).or_insert(1.0) += 0.1;
 
-        update_leaderboard_after_interaction(&mut state, &vibe_id);
+        // Update Vibe object and rebuild leaderboard
+        update_vibe_stats(&vibe_id, &mut state, current_likes, new_shares);
+        rebuild_leaderboard(&mut state);
 
         new_shares
     })
-}
-
-fn update_leaderboard_after_interaction(
-    state: &mut State,
-    vibe_id: &str,
-) {
-    if let Some(vibe) = state.user_vibes.iter()
-        .flat_map(|(_, vibes)| vibes)
-        .find(|v| v.id == vibe_id)
-        .cloned()
-    {
-        update_leaderboard(state, &vibe);
-    }
 }
 
 #[query]
@@ -532,22 +371,6 @@ fn get_leaderboard() -> Leaderboard {
         let state = state.borrow();
         state.leaderboard.clone()
     })
-}
-
-fn update_leaderboard(state: &mut State, vibe: &Vibe) {
-    state.leaderboard.most_liked.push((vibe.id.clone(), vibe.likes));
-    state.leaderboard.most_liked.sort_by(|a, b| b.1.cmp(&a.1));
-    state.leaderboard.most_liked.truncate(10);
-
-    state.leaderboard.most_shared.push((vibe.id.clone(), vibe.shares));
-    state.leaderboard.most_shared.sort_by(|a, b| b.1.cmp(&a.1));
-    state.leaderboard.most_shared.truncate(10);
-
-    let creator_score = state.token_balances.get(&vibe.creator).copied().unwrap_or(0);
-    state.leaderboard.top_creators.push((vibe.creator, creator_score));
-    state.leaderboard.top_creators.sort_by(|a, b| b.1.cmp(&a.1));
-    state.leaderboard.top_creators.dedup_by(|a, b| a.0 == b.0);
-    state.leaderboard.top_creators.truncate(10);
 }
 
 #[update]
@@ -637,6 +460,13 @@ mod tests {
 
         STATE.with(|s| {
             let state = s.borrow();
+            // Verify Vibe object was updated
+            let vibe = state.user_vibes.get(&user1).unwrap().iter()
+                .find(|v| v.id == vibe_id)
+                .unwrap();
+            assert_eq!(vibe.likes, 1);
+
+            // Verify token balances
             assert_eq!(
                 state.token_balances.get(&user1),
                 Some(&(INITIAL_BALANCE - MINT_COST + LIKE_REWARD_CREATOR))
@@ -653,6 +483,13 @@ mod tests {
 
         STATE.with(|s| {
             let state = s.borrow();
+            // Verify Vibe object was updated
+            let vibe = state.user_vibes.get(&user1).unwrap().iter()
+                .find(|v| v.id == vibe_id)
+                .unwrap();
+            assert_eq!(vibe.shares, 1);
+
+            // Verify token balances
             assert_eq!(
                 state.token_balances.get(&user1),
                 Some(&(INITIAL_BALANCE - MINT_COST + LIKE_REWARD_CREATOR + SHARE_REWARD_CREATOR))
@@ -661,6 +498,60 @@ mod tests {
                 state.token_balances.get(&user2),
                 Some(&(INITIAL_BALANCE + LIKE_REWARD_USER + SHARE_REWARD_USER))
             );
+        });
+    }
+
+    #[test]
+    fn test_leaderboard_updates() {
+        set_mock_time(1640995200);
+        STATE.with(|s| *s.borrow_mut() = State::default());
+
+        // Create non-anonymous principals for testing
+        let user1 = Principal::from_slice(&[1; 29]);
+        let user2 = Principal::from_slice(&[2; 29]);
+        let user3 = Principal::from_slice(&[3; 29]);
+
+        set_caller(user1);
+        let vibe_id1 = mint_vibe("First vibe".to_string());
+        let vibe_id2 = mint_vibe("Second vibe".to_string());
+
+        // First user likes vibe1
+        set_caller(user2);
+        like_vibe(vibe_id1.clone());
+
+        // Second user likes vibe1
+        set_caller(user3);
+        like_vibe(vibe_id1.clone());
+
+        // First user shares vibe1
+        set_caller(user2);
+        share_vibe(vibe_id1.clone());
+
+        // First user likes vibe2
+        set_caller(user2);
+        like_vibe(vibe_id2.clone());
+
+        STATE.with(|s| {
+            let state = s.borrow();
+            let leaderboard = &state.leaderboard;
+
+            // Verify top creators
+            assert!(
+                leaderboard.top_creators.iter().any(|(p, _)| *p == user1),
+                "User1 not found in top creators"
+            );
+
+            // Verify most liked
+            let most_liked_entry = leaderboard.most_liked.iter()
+                .find(|(id, _)| *id == vibe_id1)
+                .expect("Vibe not found in most liked");
+            assert_eq!(most_liked_entry.1, 2, "Expected 2 likes");
+
+            // Verify most shared
+            let most_shared_entry = leaderboard.most_shared.iter()
+                .find(|(id, _)| *id == vibe_id1)
+                .expect("Vibe not found in most shared");
+            assert_eq!(most_shared_entry.1, 1, "Expected 1 share");
         });
     }
 }
