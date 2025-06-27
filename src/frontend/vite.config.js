@@ -10,6 +10,13 @@ export default defineConfig({
       jsxRuntime: 'automatic',
     })
   ],
+  optimizeDeps: {
+    include: [
+      '@react-three/fiber',
+      '@react-three/drei',
+      'three'
+    ]
+  },
   resolve: {
     alias: {
       declarations: path.resolve(__dirname, '../declarations'),
