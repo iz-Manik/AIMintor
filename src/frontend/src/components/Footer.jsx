@@ -142,7 +142,7 @@ const Footer = () => {
               </div>
               <div>
                 <h3 className="text-3xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  Proof of Vibe
+                  AIMintor
                 </h3>
                 <p className="text-gray-400 text-sm">AI-Powered NFT Platform</p>
               </div>
