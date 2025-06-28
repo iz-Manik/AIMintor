@@ -94,7 +94,7 @@ const Footer = () => {
 
   return (
     <motion.footer
-      className="relative z-10 bg-gradient-to-br from-gray-900 via-purple-900/30 to-indigo-900/40 border-t border-white/10"
+      className="relative z-10 bg-gradient-to-br from-gray-900 via-purple-900/90 to-indigo-900/90 border-t border-gray-700"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.5 }}
@@ -103,7 +103,7 @@ const Footer = () => {
       <div className="container mx-auto px-4 py-16">
         {/* Stats Section */}
         <motion.div
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16 pb-12 border-b border-white/10"
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16 pb-12 border-b border-gray-600"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
@@ -119,7 +119,7 @@ const Footer = () => {
               <div className="text-3xl md:text-4xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
                 {stat.value}
               </div>
-              <div className="text-gray-400 text-sm font-medium">{stat.label}</div>
+              <div className="text-gray-200 text-sm font-medium">{stat.label}</div>
             </motion.div>
           ))}
         </motion.div>
@@ -144,11 +144,11 @@ const Footer = () => {
                 <h3 className="text-3xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                   AIMintor
                 </h3>
-                <p className="text-gray-400 text-sm">AI-Powered NFT Platform</p>
+                <p className="text-gray-200 text-sm">AI-Powered NFT Platform</p>
               </div>
             </div>
 
-            <p className="text-gray-300 leading-relaxed max-w-md">
+            <p className="text-gray-100 leading-relaxed max-w-md">
               Transform your emotions and thoughts into unique AI-generated NFTs on the Internet Computer.
               Join the revolution of decentralized creativity and earn $VIBE tokens for your artistic expressions.
             </p>
@@ -160,7 +160,7 @@ const Footer = () => {
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="flex-1 px-4 py-3 bg-gray-800/50 backdrop-blur-sm text-gray-200 rounded-xl border border-gray-700 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-sm"
+                  className="flex-1 px-4 py-3 bg-gray-800/80 backdrop-blur-sm text-gray-100 rounded-xl border border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-sm placeholder:text-gray-400"
                 />
                 <motion.button
                   className="px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl font-medium hover:shadow-lg transition-all"
@@ -191,7 +191,7 @@ const Footer = () => {
                 >
                   <a
                     href={link.href}
-                    className="text-gray-400 hover:text-purple-400 transition-colors duration-300 text-sm font-medium hover:translate-x-1 transform inline-block"
+                    className="text-gray-200 hover:text-purple-400 transition-colors duration-300 text-sm font-medium hover:translate-x-1 transform inline-block"
                   >
                     {link.name}
                   </a>
@@ -218,7 +218,7 @@ const Footer = () => {
                 >
                   <a
                     href={link.href}
-                    className="text-gray-400 hover:text-purple-400 transition-colors duration-300 text-sm font-medium hover:translate-x-1 transform inline-block"
+                    className="text-gray-200 hover:text-purple-400 transition-colors duration-300 text-sm font-medium hover:translate-x-1 transform inline-block"
                   >
                     {link.name}
                   </a>
@@ -245,7 +245,7 @@ const Footer = () => {
                 >
                   <a
                     href={link.href}
-                    className="text-gray-400 hover:text-purple-400 transition-colors duration-300 text-sm font-medium hover:translate-x-1 transform inline-block"
+                    className="text-gray-200 hover:text-purple-400 transition-colors duration-300 text-sm font-medium hover:translate-x-1 transform inline-block"
                   >
                     {link.name}
                   </a>
@@ -257,7 +257,7 @@ const Footer = () => {
 
         {/* Social Links */}
         <motion.div
-          className="flex flex-col items-center space-y-6 py-8 border-t border-white/10"
+          className="flex flex-col items-center space-y-6 py-8 border-t border-gray-600"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5 }}
@@ -268,7 +268,7 @@ const Footer = () => {
               <motion.a
                 key={social.name}
                 href={social.href}
-                className="group bg-gray-800/50 hover:bg-purple-600/30 p-4 rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/25 border border-gray-700/50 hover:border-purple-500/50"
+                className="group bg-gray-800/80 hover:bg-purple-600/30 p-4 rounded-2xl transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/25 border border-gray-600 hover:border-purple-500/50"
                 whileHover={{ scale: 1.1, y: -5 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0, y: 20 }}
@@ -276,7 +276,7 @@ const Footer = () => {
                 transition={{ delay: 1.6 + index * 0.1 }}
                 title={social.name}
               >
-                <div className="text-gray-400 group-hover:text-purple-400 transition-colors duration-300">
+                <div className="text-gray-200 group-hover:text-purple-400 transition-colors duration-300">
                   {social.icon}
                 </div>
               </motion.a>
@@ -286,12 +286,12 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <motion.div
-          className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10 gap-4"
+          className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-600 gap-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.8 }}
         >
-          <div className="flex flex-col md:flex-row items-center gap-4 text-gray-500 text-sm">
+          <div className="flex flex-col md:flex-row items-center gap-4 text-gray-300 text-sm">
             <p>&copy; 2025 Proof of Vibe. All rights reserved.</p>
             <div className="flex items-center gap-2">
               <span>Powered by</span>
@@ -303,11 +303,11 @@ const Footer = () => {
           </div>
 
           <div className="flex items-center gap-6 text-sm">
-            <div className="flex items-center gap-2 text-gray-400">
+            <div className="flex items-center gap-2 text-gray-200">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               <span>All systems operational</span>
             </div>
-            <div className="text-gray-500">
+            <div className="text-gray-300">
               Version 1.0.0
             </div>
           </div>
