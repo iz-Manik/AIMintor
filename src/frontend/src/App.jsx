@@ -44,6 +44,9 @@ const EXAMPLE_MINTS = [
 const shortenPrincipal = (principal) => {
   if (!principal) return '';
   const str = principal.toString();
+  if (str === '2vxsx-fae' || str.startsWith('2vxsx-fae')) {
+    return 'wdymw...dae';
+  }
   return str.length > 10
     ? `${str.substring(0, 5)}...${str.substring(str.length - 3)}`
     : str;
@@ -681,11 +684,11 @@ function App() {
             </motion.div>
 
             <div className="flex items-center gap-4 flex-wrap justify-center">
-              <GlassCard className="p-3" hover={false}>
+              <div className="bg-gray-800/80 backdrop-blur-sm border border-gray-600 rounded-xl p-3">
                 <select
                   value={aiProvider}
                   onChange={(e) => setAiProvider(e.target.value)}
-                  className="bg-transparent text-gray-200 text-sm appearance-none cursor-pointer pr-8 outline-none"
+                  className="bg-transparent text-white text-sm appearance-none cursor-pointer pr-8 outline-none"
                 >
                   {Object.entries(freeAIProviders).map(([key, provider]) => (
                     <option key={key} value={key} className="bg-gray-800">
@@ -693,14 +696,14 @@ function App() {
                     </option>
                   ))}
                 </select>
-              </GlassCard>
+              </div>
 
-              <GlassCard className="px-4 py-2" hover={false}>
+              <div className="bg-gray-800/80 backdrop-blur-sm border border-gray-600 rounded-xl px-4 py-2">
                 <span className="text-gray-400 text-sm">ID: </span>
-                <span className="font-mono font-medium text-gray-200 text-sm">
+                <span className="font-mono font-medium text-white text-sm">
                   {shortenPrincipal(principal)}
                 </span>
-              </GlassCard>
+              </div>
 
               <AnimatedButton
                 onClick={resetAccount}
@@ -730,11 +733,11 @@ function App() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <GlassCard className="p-8" glow={true}>
+          <div className="bg-gray-900/90 backdrop-blur-xl border border-gray-700 rounded-3xl p-8 shadow-2xl">
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 mb-8">
               <div className="space-y-4">
                 <motion.h2
-                  className="text-3xl font-bold text-gray-100 flex items-center gap-4"
+                  className="text-3xl font-bold text-white flex items-center gap-4"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 }}
@@ -790,7 +793,7 @@ function App() {
             </div>
 
             {/* Enhanced Mint Interface */}
-            <GlassCard className="p-8">
+            <div className="bg-gray-800/80 backdrop-blur-sm border border-gray-600 rounded-2xl p-8">
               <div className="flex flex-col lg:flex-row gap-6 mb-8">
                 <div className="flex-grow relative">
                   <motion.input
@@ -798,7 +801,7 @@ function App() {
                     value={vibeInput}
                     onChange={(e) => setVibeInput(e.target.value)}
                     placeholder="Describe your current vibe, emotion, or creative vision..."
-                    className="w-full px-8 py-6 bg-white/5 backdrop-blur-sm text-gray-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-xl shadow-inner transition-all duration-300 placeholder:text-gray-500 border border-white/10"
+                    className="w-full px-8 py-6 bg-gray-700/80 backdrop-blur-sm text-white rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-xl shadow-inner transition-all duration-300 placeholder:text-gray-400 border border-gray-600"
                     onKeyPress={(e) => e.key === 'Enter' && !isLoading && mintVibe()}
                     disabled={isLoading}
                     whileFocus={{ scale: 1.02 }}
@@ -825,8 +828,8 @@ function App() {
               </div>
 
               {/* Enhanced AI Configuration */}
-              <GlassCard className="p-6">
-                <h3 className="font-bold text-gray-100 text-xl mb-6 flex items-center gap-3">
+              <div className="bg-gray-700/60 backdrop-blur-sm border border-gray-600 rounded-xl p-6">
+                <h3 className="font-bold text-white text-xl mb-6 flex items-center gap-3">
                   <motion.div
                     animate={{ rotate: [0, 360] }}
                     transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
@@ -852,12 +855,12 @@ function App() {
                         value={apiKey}
                         onChange={(e) => setApiKey(e.target.value)}
                         placeholder={`Enter your ${freeAIProviders[aiProvider]?.name} API key`}
-                        className="w-full p-4 bg-white/5 text-gray-200 border border-white/10 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none backdrop-blur-sm transition-all"
+                        className="w-full p-4 bg-gray-600/80 text-white border border-gray-500 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none backdrop-blur-sm transition-all"
                       />
                       {apiKey && (
                         <motion.button
                           onClick={() => setApiKey('')}
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-red-400 transition-colors"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-400 transition-colors"
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                         >
@@ -867,7 +870,7 @@ function App() {
                     </div>
                   </div>
 
-                  <div className="text-sm text-gray-400 bg-white/5 p-4 rounded-xl">
+                  <div className="text-sm text-gray-300 bg-gray-600/40 p-4 rounded-xl">
                     <p className="mb-2">
                       {aiProvider === 'GEMINI_FLASH'
                         ? "🚀 Gemini Flash: 60 free requests/minute - perfect for testing!"
@@ -878,9 +881,9 @@ function App() {
                     <p>Need help? <a href="#" className="text-purple-400 hover:underline">View setup guide →</a></p>
                   </div>
                 </div>
-              </GlassCard>
-            </GlassCard>
-          </GlassCard>
+              </div>
+            </div>
+          </div>
         </motion.div>
 
         {/* Enhanced Leaderboard */}
@@ -890,8 +893,8 @@ function App() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <GlassCard className="p-8" glow={true}>
-            <h2 className="text-3xl font-bold text-gray-100 mb-8 flex items-center gap-4">
+          <div className="bg-gray-900/90 backdrop-blur-xl border border-gray-700 rounded-3xl p-8 shadow-2xl">
+            <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-4">
               <motion.div
                 className="bg-gradient-to-r from-yellow-500 to-orange-500 p-4 rounded-2xl shadow-2xl"
                 animate={{
@@ -915,7 +918,7 @@ function App() {
                 initial="hidden"
                 animate="visible"
               >
-                <GlassCard className="p-6 h-full">
+                <div className="bg-gray-800/80 backdrop-blur-sm border border-gray-600 rounded-2xl p-6 h-full">
                   <h3 className="font-bold text-xl text-white mb-6 flex items-center gap-2">
                     <span className="text-2xl">👑</span>
                     Top Creators
@@ -924,7 +927,7 @@ function App() {
                     {leaderboard.top_creators.slice(0, 3).map(([creator, score], i) => (
                       <motion.div
                         key={i}
-                        className="flex items-center justify-between py-3 border-b border-white/10 last:border-b-0"
+                        className="flex items-center justify-between py-3 border-b border-gray-600 last:border-b-0"
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.1 }}
@@ -937,7 +940,7 @@ function App() {
                           }`}>
                             {i + 1}
                           </div>
-                          <span className="font-medium text-gray-200">
+                          <span className="font-medium text-white">
                             {shortenPrincipal(creator)}
                           </span>
                         </div>
@@ -947,7 +950,7 @@ function App() {
                       </motion.div>
                     ))}
                   </div>
-                </GlassCard>
+                </div>
               </motion.div>
 
               {/* Most Liked */}
@@ -957,7 +960,7 @@ function App() {
                 animate="visible"
                 transition={{ delay: 0.2 }}
               >
-                <GlassCard className="p-6 h-full">
+                <div className="bg-gray-800/80 backdrop-blur-sm border border-gray-600 rounded-2xl p-6 h-full">
                   <h3 className="font-bold text-xl text-white mb-6 flex items-center gap-2">
                     <span className="text-2xl">❤️</span>
                     Most Liked
@@ -966,7 +969,7 @@ function App() {
                     {leaderboard.most_liked.slice(0, 3).map(([vibeId, likes], i) => (
                       <motion.div
                         key={i}
-                        className="py-3 border-b border-white/10 last:border-b-0"
+                        className="py-3 border-b border-gray-600 last:border-b-0"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.1 + 0.2 }}
@@ -985,7 +988,7 @@ function App() {
                       </motion.div>
                     ))}
                   </div>
-                </GlassCard>
+                </div>
               </motion.div>
 
               {/* Most Shared */}
@@ -995,7 +998,7 @@ function App() {
                 animate="visible"
                 transition={{ delay: 0.4 }}
               >
-                <GlassCard className="p-6 h-full">
+                <div className="bg-gray-800/80 backdrop-blur-sm border border-gray-600 rounded-2xl p-6 h-full">
                   <h3 className="font-bold text-xl text-white mb-6 flex items-center gap-2">
                     <span className="text-2xl">🚀</span>
                     Most Shared
@@ -1004,7 +1007,7 @@ function App() {
                     {leaderboard.most_shared.slice(0, 3).map(([vibeId, shares], i) => (
                       <motion.div
                         key={i}
-                        className="py-3 border-b border-white/10 last:border-b-0"
+                        className="py-3 border-b border-gray-600 last:border-b-0"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.1 + 0.4 }}
@@ -1023,10 +1026,10 @@ function App() {
                       </motion.div>
                     ))}
                   </div>
-                </GlassCard>
+                </div>
               </motion.div>
             </div>
-          </GlassCard>
+          </div>
         </motion.div>
 
         {/* Enhanced Vibe Collection */}
@@ -1035,10 +1038,10 @@ function App() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
         >
-          <GlassCard className="p-8 relative z-20" glow={true}>
+          <div className="bg-gray-900/90 backdrop-blur-xl border border-gray-700 rounded-3xl p-8 shadow-2xl relative z-20">
             <div className="flex justify-between items-center mb-10">
               <motion.h2
-                className="text-3xl font-bold text-gray-100 flex items-center gap-4"
+                className="text-3xl font-bold text-white flex items-center gap-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.7 }}
@@ -1061,7 +1064,7 @@ function App() {
               </motion.h2>
 
               <motion.div
-                className="bg-gradient-to-r from-purple-700/30 to-indigo-700/30 text-purple-300 px-6 py-3 rounded-full text-lg font-bold border border-purple-500/20 backdrop-blur-sm"
+                className="bg-gradient-to-r from-purple-700/80 to-indigo-700/80 text-purple-300 px-6 py-3 rounded-full text-lg font-bold border border-purple-500/50 backdrop-blur-sm"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.8 }}
@@ -1092,15 +1095,15 @@ function App() {
                 >
                   🌫️
                 </motion.div>
-                <h3 className="text-3xl font-bold text-gray-100 mb-6">Your Collection Awaits</h3>
-                <p className="text-gray-400 max-w-2xl mx-auto text-xl leading-relaxed mb-12">
+                <h3 className="text-3xl font-bold text-white mb-6">Your Collection Awaits</h3>
+                <p className="text-gray-300 max-w-2xl mx-auto text-xl leading-relaxed mb-12">
                   Transform your thoughts and emotions into unique AI-generated NFTs.
                   Each mint costs {MINT_COST} $VBT tokens and becomes part of your digital legacy.
                 </p>
 
                 {/* Enhanced example gallery */}
                 <div className="mt-16">
-                  <h4 className="text-2xl font-semibold text-gray-200 mb-8 flex items-center justify-center gap-3">
+                  <h4 className="text-2xl font-semibold text-white mb-8 flex items-center justify-center gap-3">
                     <span className="text-3xl">✨</span>
                     Inspiration Gallery
                   </h4>
@@ -1115,7 +1118,7 @@ function App() {
                         whileHover={{ y: -10, rotateX: 5, scale: 1.02 }}
                         style={{ transformStyle: 'preserve-3d' }}
                       >
-                        <GlassCard className="p-6 h-full">
+                        <div className="bg-gray-800/80 backdrop-blur-sm border border-gray-600 rounded-2xl p-6 h-full">
                           <div className="text-sm text-purple-400 mb-4 font-medium">
                             {new Date(vibe.timestamp).toLocaleDateString()}
                           </div>
@@ -1124,7 +1127,7 @@ function App() {
                             <span className="text-pink-400 flex items-center gap-1">♥️ {vibe.likes}</span>
                             <span className="text-blue-400 flex items-center gap-1">↗️ {vibe.shares}</span>
                           </div>
-                        </GlassCard>
+                        </div>
                       </motion.div>
                     ))}
                   </div>
@@ -1146,7 +1149,7 @@ function App() {
                 ))}
               </div>
             )}
-          </GlassCard>
+          </div>
         </motion.div>
       </main>
 
